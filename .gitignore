@@ -1,0 +1,26 @@
+# Variables de entorno (¡nunca subir!)
+.env
+.env.*
+!.env.example
+
+# Angular / Node
+node_modules/
+dist/
+web/node_modules/
+web/dist/
+
+# .NET
+target/
+api/target/
+*.iml
+.gradle/
+
+# Editor / sistema
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+.DS_Store
+
+# Datos locales
+data/
