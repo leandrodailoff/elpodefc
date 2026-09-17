@@ -7,6 +7,8 @@ Web del club Pro **El Pode FC** (EA Sports FC): partidos, estadísticas, medios 
 ## Estado
 
 - Esqueleto inicial: estructura de monorepo + PostgreSQL local en Docker.
+- Backend `api/`: **ASP.NET Core 9** con las entidades del esquema v1, EF Core +
+  Npgsql y la **migración `InitialCreate` aplicada** a la BD local (puerto 5433).
 - La documentación viva de la idea (análisis, BD, API, estructura) está en
   `d:\Proyectos\.clinerules\elpodefc` y se refleja en [`docs/`](docs/).
 

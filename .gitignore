@@ -11,9 +11,13 @@ web/dist/
 
 # .NET
 target/
-api/target/
+bin/
+obj/
 *.iml
 .gradle/
+api/target/
+api/bin/
+api/obj/
 
 # Editor / sistema
 .vscode/
