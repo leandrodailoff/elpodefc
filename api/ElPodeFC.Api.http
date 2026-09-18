@@ -1,6 +1,150 @@
-@ElPodeFC.Api_HostAddress = http://localhost:5098
+@host = http://localhost:8081
+@clave = elpodefc-dev-local
 
-GET {{ElPodeFC.Api_HostAddress}}/weatherforecast/
+###
+# Ficha del club (público): trae juegaHoy calculado por el servidor
+GET {{host}}/api/club
 Accept: application/json
 
 ###
+# Editar la ficha del club (requiere la clave)
+PUT {{host}}/api/club
+X-Club-Key: {{clave}}
+Content-Type: application/json
+
+{
+  "discordUrl": "https://discord.gg/elpodefc",
+  "horarioJuego": "22:00:00",
+  "diasJuego": ["mar", "mie", "jue", "vie", "sab"],
+  "pausado": false
+}
+
+###
+# Plantel
+GET {{host}}/api/jugadores
+Accept: application/json
+
+###
+# Alta de jugador
+POST {{host}}/api/jugadores
+X-Club-Key: {{clave}}
+Content-Type: application/json
+
+{
+  "nombre": "Lean",
+  "gamertag": "leandrodailoff",
+  "posicionHabitual": "DEL"
+}
+
+###
+# Perfil de un jugador con sus stats derivadas
+GET {{host}}/api/jugadores/1
+Accept: application/json
+
+###
+# Historial de partidos (filtros opcionales)
+GET {{host}}/api/partidos?limit=10
+Accept: application/json
+
+###
+# Filtros: ?resultado=G&tipo=Liga&desde=2026-01-01T00:00:00-03:00&hasta=2026-12-31T00:00:00-03:00
+GET {{host}}/api/partidos?resultado=G&tipo=Liga
+Accept: application/json
+
+###
+# EL FLUJO CRÍTICO: un solo POST crea el partido completo (datos + actuaciones)
+POST {{host}}/api/partidos
+X-Club-Key: {{clave}}
+Content-Type: application/json
+
+{
+  "fecha": "2026-09-17T22:00:00-03:00",
+  "rival": "Los Elefantes FC",
+  "resultado": "G",
+  "marcadorPropio": 4,
+  "marcadorRival": 2,
+  "tipo": "Liga",
+  "notas": "golazo de tiro libre en el 90'",
+  "registradoPor": "Lean",
+  "actuaciones": [
+    { "jugadorId": 3, "posicion": "POR", "goles": 0, "mvp": false },
+    { "jugadorId": 4, "posicion": "DEF", "goles": 1, "mvp": false },
+    { "jugadorId": 2, "posicion": "MED", "goles": 1, "mvp": true },
+    { "jugadorId": 1, "posicion": "DEL", "goles": 2, "mvp": false }
+  ]
+}
+
+###
+# Detalle del partido: actuaciones + grabaciones
+GET {{host}}/api/partidos/1
+Accept: application/json
+
+###
+# Panel del club: récord, racha, goleadores y MVP (todo derivado)
+GET {{host}}/api/club/estadisticas
+Accept: application/json
+
+###
+# Grabaciones de un partido (por id)
+GET {{host}}/api/medios?partido_id=1
+Accept: application/json
+
+###
+# Medio por URL (YouTube): el tipo lo deriva el servidor
+POST {{host}}/api/medios
+X-Club-Key: {{clave}}
+Content-Type: multipart/form-data; boundary=----PodeBoundary
+
+------PodeBoundary
+Content-Disposition: form-data; name="Url"
+
+https://youtu.be/abc123XYZ
+------PodeBoundary
+Content-Disposition: form-data; name="PartidoId"
+
+1
+------PodeBoundary
+Content-Disposition: form-data; name="Titulo"
+
+Resumen vs Los Elefantes
+------PodeBoundary--
+
+###
+# Archivo (imagen <= 10 MB / video <= 500 MB). OJO: el path debe existir.
+POST {{host}}/api/medios
+X-Club-Key: {{clave}}
+Content-Type: multipart/form-data; boundary=----PodeBoundary
+
+------PodeBoundary
+Content-Disposition: form-data; name="PartidoId"
+
+1
+------PodeBoundary
+Content-Disposition: form-data; name="Archivo"; filename="foto.png"
+Content-Type: image/png
+
+< ./data/medios/mi-foto.png
+------PodeBoundary--
+
+###
+# La canchita (el esquema es JSON real, se guarda como JSONB)
+POST {{host}}/api/formaciones
+X-Club-Key: {{clave}}
+Content-Type: application/json
+
+{
+  "nombre": "11 titular 2026",
+  "esquema": {
+    "formacion": "1-1-1-1",
+    "titulares": [
+      { "pos": "POR", "x": 50, "y": 6,  "jugadorId": 3 },
+      { "pos": "DEF", "x": 50, "y": 28, "jugadorId": 4 },
+      { "pos": "MED", "x": 50, "y": 52, "jugadorId": 2 },
+      { "pos": "DEL", "x": 50, "y": 78, "jugadorId": 1 }
+    ]
+  }
+}
+
+###
+GET {{host}}/api/formaciones
+Accept: application/json
