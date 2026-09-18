@@ -9,24 +9,29 @@ Web del club Pro **El Pode FC** (EA Sports FC): partidos, estadísticas, medios 
 - Esqueleto inicial: estructura de monorepo + PostgreSQL local en Docker.
 - Backend `api/`: **ASP.NET Core 9** con las entidades del esquema v1, EF Core +
   Npgsql y la **migración `InitialCreate` aplicada** a la BD local (puerto 5433).
+- Frontend `web/`: **Angular 21** (standalone, signals, sin SSR) con las 9 pantallas
+  del mapa de secciones, layout propio, proxy `/api` y la clave del club en `core/`.
 - La documentación viva de la idea (análisis, BD, API, estructura) está en
   `d:\Proyectos\.clinerules\elpodefc` y se refleja en [`docs/`](docs/).
 
 ## Requisitos
 
 - Docker Desktop corriendo en la máquina (o Docker Engine en Linux).
+- **.NET SDK 9** para la API y **Node 22+ / npm 11.19+** para el frontend.
 
-## Arranque local (solo la BD por ahora)
+## Arranque local
 
 ```bash
-docker compose up -d db
-docker compose ps            # esperar a que esté healthy
-docker exec -it elpodefc-db psql -U elpodefc -d elpodefc   # consola
+docker compose up -d db        # 1) base de datos (esperar "healthy")
+cd api && dotnet run           # 2) API en http://localhost:8081
+cd web && npm install && npm start   # 3) SPA en http://localhost:4200
 ```
 
 Parar: `docker compose stop db` · Borrar todo (datos incluidos): `docker compose down -v`
 
 ## Próximos pasos
 
-- [`api/`](api/) — ASP.NET Core · [`web/`](web/) — Angular · [`deploy/`](deploy/) —
-  layout completo en `estructura-proyecto.md` (en `.clinerules/elpodefc`).
+- [`api/`](api/) — controllers + servicios del contrato de API (pendiente).
+- [`web/`](web/) — consumir la API en cada sección (pendiente).
+- [`deploy/`](deploy/) — compose completo + proxy + SSL · layout en `estructura-proyecto.md`
+  (en `.clinerules/elpodefc`).

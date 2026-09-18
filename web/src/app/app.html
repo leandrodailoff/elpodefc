@@ -1,0 +1,25 @@
+﻿<header class="encabezado">
+  <a class="marca" routerLink="/">
+    <span class="escudo">⚽</span>
+    <span>{{ title() }}</span>
+  </a>
+
+  <nav class="menu">
+    <a routerLink="/partidos" routerLinkActive="activo">Partidos</a>
+    <a routerLink="/jugadores" routerLinkActive="activo">Plantel</a>
+    <a routerLink="/estadisticas" routerLinkActive="activo">Estadísticas</a>
+    <a routerLink="/medios" routerLinkActive="activo">Grabaciones</a>
+    <a routerLink="/formaciones" routerLinkActive="activo">La canchita</a>
+  </nav>
+
+  <a class="admin" routerLink="/admin" routerLinkActive="activo">Cargar</a>
+</header>
+
+<main class="contenido">
+  <router-outlet />
+</main>
+
+<footer class="pie">
+  <!-- Pendiente: widget de horario ("¿se juega hoy?") + botón del Discord → GET /api/club -->
+  <p>Pro Clubs · EA Sports FC — la memoria del club en un solo lugar.</p>
+</footer>
