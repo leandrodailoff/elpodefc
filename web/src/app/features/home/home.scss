@@ -1,0 +1,34 @@
+.estado-club {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
+.estado {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.estado.si {
+  color: var(--acento);
+}
+
+.estado.no {
+  color: var(--texto-suave);
+}
+
+.detalle {
+  margin: 0 0 0.5rem;
+  color: var(--texto-suave);
+}
+
+.detalle strong {
+  color: var(--texto);
+}
+
+.chip {
+  margin-left: 0.5rem;
+}
+

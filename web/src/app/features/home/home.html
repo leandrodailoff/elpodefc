@@ -1,13 +1,83 @@
 <h1>Bienvenido a El Pode FC</h1>
 <p>La casa del club: partidos, estadísticas, grabaciones y la canchita del 11 titular.</p>
 
-<!-- Pendiente: widget de horario ("¿se juega hoy?"), botón del Discord y últimos 5 partidos
-     → GET /api/club + GET /api/partidos?limit=5 -->
-<section>
-  <h2>Próximamente</h2>
-  <ul>
-    <li>¿Se juega hoy? Horario y días de juego del club.</li>
-    <li>Botón para entrar al Discord.</li>
-    <li>Los últimos resultados.</li>
-  </ul>
+<!-- El estado del club: lo primero que quiere saber un jugador al entrar -->
+<section class="tarjeta estado-club">
+  @if (club.cargando()) {
+    <p class="aviso">Viendo si hay partido…</p>
+  } @else if (club.error()) {
+    <p class="error">{{ club.error() }}</p>
+    <button class="boton" type="button" (click)="club.recargar()">Reintentar</button>
+  } @else {
+    @let c = club.dato()!;
+
+    @if (c.pausado) {
+      <p class="estado">🛑 El club está en pausa</p>
+      <p class="detalle">Volvemos pronto. Mientras tanto, quedan los partidos y las stats.</p>
+    } @else if (c.juegaHoy) {
+      <p class="estado si">⚽ Hoy se juega</p>
+      <p class="detalle">
+        @if (c.horarioJuego) {
+          Arrancamos a las <strong>{{ textoHora(c.horarioJuego) }}</strong>.
+        }
+        Se juega {{ textoDias(c.diasJuego) }}.
+      </p>
+    } @else {
+      <p class="estado no">Hoy no hay partido</p>
+      <p class="detalle">
+        Se juega {{ textoDias(c.diasJuego) }}
+        @if (c.horarioJuego) {
+          a las <strong>{{ textoHora(c.horarioJuego) }}</strong>
+        }.
+      </p>
+    }
+
+    @if (c.discordUrl) {
+      <a class="boton boton-principal" [href]="c.discordUrl" target="_blank" rel="noopener">
+        Entrar al Discord
+      </a>
+    }
+  }
+</section>
+
+<!-- Lo último que se jugó -->
+<section class="seccion">
+  <h2>Últimos partidos</h2>
+
+  @if (ultimos.cargando()) {
+    <p class="aviso">Cargando el historial…</p>
+  } @else if (ultimos.error()) {
+    <p class="error">{{ ultimos.error() }}</p>
+    <button class="boton" type="button" (click)="ultimos.recargar()">Reintentar</button>
+  } @else if (ultimos.dato()!.length === 0) {
+    <p class="aviso">Todavía no hay partidos cargados. El primero entra con el próximo partido.</p>
+  } @else {
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Rival</th>
+          <th>Marcador</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (p of ultimos.dato()!; track p.id) {
+          <tr>
+            <td>{{ p.fecha | date: 'dd/MM/yyyy' }}</td>
+            <td>
+              <a [routerLink]="['/partidos', p.id]">{{ p.rival || 'Sin rival' }}</a>
+              @if (p.tipo) {
+                <span class="chip">{{ p.tipo }}</span>
+              }
+            </td>
+            <td>{{ p.marcadorPropio }} - {{ p.marcadorRival }}</td>
+            <td><app-resultado-badge [resultado]="p.resultado" /></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <p><a class="boton" routerLink="/partidos">Ver todo el historial</a></p>
+  }
 </section>

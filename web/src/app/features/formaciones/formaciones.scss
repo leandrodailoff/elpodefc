@@ -1,0 +1,63 @@
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 1rem 0;
+}
+
+.filtros .boton.activo {
+  border-color: var(--acento);
+  color: var(--acento);
+  background: rgba(53, 196, 106, 0.12);
+}
+
+.cancha-figura {
+  margin: 0;
+  max-width: 520px;
+}
+
+.cancha {
+  display: block;
+  width: 100%;
+  border-radius: var(--radio);
+  overflow: hidden;
+}
+
+.cesped {
+  fill: #17351f;
+}
+
+.linea {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.22);
+  stroke-width: 0.6;
+}
+
+.relleno {
+  fill: rgba(255, 255, 255, 0.3);
+}
+
+.puesto circle {
+  fill: var(--acento);
+  stroke: var(--fondo);
+  stroke-width: 0.8;
+}
+
+.puesto .pos {
+  fill: #06210f;
+  font-size: 3.1px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.puesto .nombre {
+  fill: var(--texto);
+  font-size: 3.2px;
+  font-weight: 600;
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: rgba(15, 23, 32, 0.85);
+  stroke-width: 0.9;
+}
+

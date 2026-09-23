@@ -1,4 +1,75 @@
-<h1>Jugador #{{ id() }}</h1>
-<p>Sus estadísticas individuales: partidos, goles, MVP y eficacia.</p>
+@if (jugador.cargando()) {
+  <p class="aviso">Cargando el jugador…</p>
+} @else if (jugador.error()) {
+  <p class="error">{{ jugador.error() }}</p>
+  <button class="boton" type="button" (click)="jugador.recargar()">Reintentar</button>
+} @else {
+  @let j = jugador.dato()!;
 
-<!-- Pendiente: GET /api/jugadores/{id} → stats calculadas en el backend -->
+  <p><a class="boton" routerLink="/jugadores">← Volver al plantel</a></p>
+
+  <section class="tarjeta encabezado">
+    @if (j.fotoUrl) {
+      <img class="foto" [src]="j.fotoUrl" [alt]="j.nombre" />
+    } @else {
+      <span class="inicial">{{ j.nombre.charAt(0) }}</span>
+    }
+
+    <div>
+      <h1>{{ j.nombre }}</h1>
+      @if (j.gamertag) {
+        <p class="gamertag">{{ j.gamertag }}</p>
+      }
+      <p>
+        @if (j.posicionHabitual) {
+          <span class="chip">{{ j.posicionHabitual }}</span>
+        }
+        <span class="chip">{{ j.activo ? 'En el club' : 'Histórico' }}</span>
+      </p>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <h2>Sus números</h2>
+
+    @if (j.stats.partidos === 0) {
+      <p class="aviso">Todavía no tiene partidos cargados.</p>
+    } @else {
+      <div class="grilla">
+        <div class="tarjeta numero">
+          <span class="valor">{{ j.stats.partidos }}</span>
+          <span class="etiqueta">Partidos</span>
+        </div>
+        <div class="tarjeta numero">
+          <span class="valor">{{ j.stats.goles }}</span>
+          <span class="etiqueta">Goles</span>
+        </div>
+        <div class="tarjeta numero">
+          <span class="valor">{{ j.stats.golesPorPartido }}</span>
+          <span class="etiqueta">Goles por partido</span>
+        </div>
+        <div class="tarjeta numero">
+          <span class="valor">{{ j.stats.mvp }}</span>
+          <span class="etiqueta">MVP</span>
+        </div>
+      </div>
+
+      <table class="tabla record">
+        <thead>
+          <tr>
+            <th>Ganados</th>
+            <th>Empatados</th>
+            <th>Perdidos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="g">{{ j.stats.ganados }}</td>
+            <td>{{ j.stats.empatados }}</td>
+            <td class="p">{{ j.stats.perdidos }}</td>
+          </tr>
+        </tbody>
+      </table>
+    }
+  </section>
+}

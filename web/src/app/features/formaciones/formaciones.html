@@ -1,4 +1,68 @@
 <h1>La canchita</h1>
-<p>El 11 titular sobre la cancha.</p>
+<p>El 11 titular del club, puesto en la cancha.</p>
 
-<!-- Pendiente: GET /api/formaciones → SVG con las posiciones (el esquema viene en JSONB) -->
+@if (formaciones.cargando()) {
+  <p class="aviso">Armando la cancha…</p>
+} @else if (formaciones.error()) {
+  <p class="error">{{ formaciones.error() }}</p>
+  <button class="boton" type="button" (click)="formaciones.recargar()">Reintentar</button>
+} @else if (formaciones.dato()!.length === 0) {
+  <p class="aviso">
+    Todavía no hay ninguna formación armada. El 11 titular se define desde la carga.
+  </p>
+} @else {
+  @if (formaciones.dato()!.length > 1) {
+    <div class="filtros">
+      @for (f of formaciones.dato()!; track f.id) {
+        <button
+          type="button"
+          class="boton"
+          [class.activo]="actual()?.id === f.id"
+          (click)="seleccionada.set(f.id)"
+        >
+          {{ f.nombre }}
+        </button>
+      }
+    </div>
+  }
+
+  @let f = actual()!;
+
+  <figure class="cancha-figura">
+    <!--
+      Ojo con las coordenadas: en el esquema el arco propio está en y=0 (abajo en la
+      cancha de un juego), pero en SVG y=0 es ARRIBA. Por eso se dibuja `100 - y`:
+      así el arquero queda abajo y el ataque arriba, como se mira una cancha de verdad.
+    -->
+    <svg class="cancha" viewBox="0 0 100 100" role="img" [attr.aria-label]="'Formación ' + f.nombre">
+      <rect class="cesped" x="0" y="0" width="100" height="100" rx="2" />
+
+      <!-- Líneas: medio campo, círculo central, áreas y puntos de penal -->
+      <line class="linea" x1="0" y1="50" x2="100" y2="50" />
+      <circle class="linea" cx="50" cy="50" r="10" />
+      <rect class="linea" x="24" y="88" width="52" height="12" />
+      <rect class="linea" x="24" y="0" width="52" height="12" />
+      <circle class="relleno" cx="50" cy="90" r="1" />
+      <circle class="relleno" cx="50" cy="10" r="1" />
+
+      @for (t of f.esquema.titulares ?? []; track t.jugadorId) {
+        <g class="puesto" [attr.transform]="'translate(' + t.x + ' ' + (100 - t.y) + ')'">
+          <circle r="4.2" />
+          <text class="pos" y="1.2">{{ t.pos }}</text>
+          <text class="nombre" y="8">{{ nombre(t.jugadorId) }}</text>
+        </g>
+      }
+    </svg>
+
+    <figcaption class="aviso">
+      {{ f.nombre }}
+      @if (f.esquema.formacion) {
+        · {{ f.esquema.formacion }}
+      }
+      · {{ (f.esquema.titulares ?? []).length }} jugadores
+      @if (jugadores.cargando()) {
+        · <span>cargando nombres…</span>
+      }
+    </figcaption>
+  </figure>
+}

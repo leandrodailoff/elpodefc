@@ -1,4 +1,100 @@
 <h1>Estadísticas</h1>
-<p>El panel del club: récord G/E/P, racha actual, goleador y ranking de MVP.</p>
+<p>El club en números: cómo viene, quién la mete y quién se lleva los MVP.</p>
 
-<!-- Pendiente: GET /api/club/estadisticas -->
+@if (stats.cargando()) {
+  <p class="aviso">Sacando las cuentas…</p>
+} @else if (stats.error()) {
+  <p class="error">{{ stats.error() }}</p>
+  <button class="boton" type="button" (click)="stats.recargar()">Reintentar</button>
+} @else {
+  @let s = stats.dato()!;
+
+  @if (s.partidos === 0) {
+    <p class="aviso">Todavía no hay partidos cargados. Las stats aparecen solas.</p>
+  } @else {
+    <div class="grilla">
+      <div class="tarjeta numero">
+        <span class="valor">{{ s.partidos }}</span>
+        <span class="etiqueta">Partidos jugados</span>
+      </div>
+      <div class="tarjeta numero">
+        <span class="valor">{{ s.ganados }} - {{ s.empatados }} - {{ s.perdidos }}</span>
+        <span class="etiqueta">Ganados - Empatados - Perdidos</span>
+      </div>
+      <div class="tarjeta numero">
+        <span class="valor">{{ s.golesPropios }} : {{ s.golesRivales }}</span>
+        <span class="etiqueta">
+          Goles a favor y en contra
+          @if (diferencia() !== 0) {
+            ({{ diferencia() > 0 ? '+' : '' }}{{ diferencia() }})
+          }
+        </span>
+      </div>
+      <div class="tarjeta numero">
+        <span class="valor">{{ textoRacha() }}</span>
+        <span class="etiqueta">Cómo venimos</span>
+      </div>
+    </div>
+
+    <section class="seccion">
+      <h2>Últimos resultados</h2>
+      <p class="resultados">
+        @for (r of s.ultimosResultados; track $index) {
+          <app-resultado-badge [resultado]="r" />
+        }
+      </p>
+    </section>
+
+    <section class="seccion">
+      <h2>Goleadores</h2>
+      @if (s.goleadores.length === 0) {
+        <p class="aviso">Nadie convirtió todavía.</p>
+      } @else {
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Jugador</th>
+              <th>Goles</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (g of s.goleadores; track g.jugadorId; let i = $index) {
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td><a [routerLink]="['/jugadores', g.jugadorId]">{{ g.jugador }}</a></td>
+                <td>{{ g.cantidad }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </section>
+
+    <section class="seccion">
+      <h2>Ranking de MVP</h2>
+      @if (s.mvps.length === 0) {
+        <p class="aviso">Todavía no hay MVP cargados.</p>
+      } @else {
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Jugador</th>
+              <th>MVP</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (m of s.mvps; track m.jugadorId; let i = $index) {
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td><a [routerLink]="['/jugadores', m.jugadorId]">{{ m.jugador }}</a></td>
+                <td>{{ m.cantidad }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </section>
+  }
+}

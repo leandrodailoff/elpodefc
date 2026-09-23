@@ -1,0 +1,89 @@
+.cabecera {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.marcador {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  font-weight: 700;
+}
+
+.marcador .numero {
+  font-size: 2.4rem;
+  color: var(--acento);
+}
+
+.marcador .guion {
+  color: var(--texto-suave);
+}
+
+.datos h1 {
+  font-size: 1.3rem;
+}
+
+.notas {
+  font-style: italic;
+  color: var(--texto);
+}
+
+.galeria {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.medio {
+  margin: 0;
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  overflow: hidden;
+}
+
+.medio figcaption {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
+.medio .foto,
+.medio .video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 0;
+}
+
+.miniatura {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  line-height: 0;
+}
+
+.miniatura img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.miniatura .play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.35);
+}
+

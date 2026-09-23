@@ -1,4 +1,39 @@
 <h1>Grabaciones</h1>
-<p>Fotos y videos de los partidos del club.</p>
+<p>Las fotos y los videos de los partidos del club.</p>
 
-<!-- Pendiente: GET /api/medios (galería general) y filtrado por partido -->
+@if (medios.cargando()) {
+  <p class="aviso">Cargando la galería…</p>
+} @else if (medios.error()) {
+  <p class="error">{{ medios.error() }}</p>
+  <button class="boton" type="button" (click)="medios.recargar()">Reintentar</button>
+} @else if (medios.dato()!.length === 0) {
+  <p class="aviso">
+    Todavía no hay nada subido. Las fotos y los videos se cargan después de cada partido.
+  </p>
+} @else {
+  <div class="galeria">
+    @for (m of medios.dato()!; track m.id) {
+      <figure class="medio">
+        @if (m.tipo === 'youtube' && youtubeId(m.url)) {
+          <a [href]="m.url!" target="_blank" rel="noopener" class="miniatura">
+            <img [src]="youtubeMiniatura(youtubeId(m.url)!)" [alt]="m.titulo || 'Video'" />
+            <span class="play">▶</span>
+          </a>
+        } @else if (m.tipo === 'imagen' && m.url) {
+          <a [href]="m.url" target="_blank" rel="noopener">
+            <img class="foto" [src]="m.url" [alt]="m.titulo || 'Foto'" />
+          </a>
+        } @else if (m.url) {
+          <a class="boton" [href]="m.url" target="_blank" rel="noopener">Ver el video</a>
+        }
+
+        <figcaption>
+          {{ m.titulo || 'Sin título' }}
+          @if (m.partidoId) {
+            · <a [routerLink]="['/partidos', m.partidoId]">ver el partido</a>
+          }
+        </figcaption>
+      </figure>
+    }
+  </div>
+}

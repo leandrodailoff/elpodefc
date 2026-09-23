@@ -1,4 +1,107 @@
-<h1>Partido #{{ id() }}</h1>
-<p>Acá van las actuaciones del partido y sus grabaciones.</p>
+@if (partido.cargando()) {
+  <p class="aviso">Cargando el partido…</p>
+} @else if (partido.error()) {
+  <p class="error">{{ partido.error() }}</p>
+  <button class="boton" type="button" (click)="partido.recargar()">Reintentar</button>
+} @else {
+  @let p = partido.dato()!;
 
-<!-- Pendiente: GET /api/partidos/{id} → actuaciones + medios del partido -->
+  <p><a class="boton" routerLink="/partidos">← Volver al historial</a></p>
+
+  <section class="tarjeta cabecera">
+    <div class="marcador">
+      <span class="numero">{{ p.marcadorPropio }}</span>
+      <span class="guion">-</span>
+      <span class="numero">{{ p.marcadorRival }}</span>
+    </div>
+    <div class="datos">
+      <h1>vs {{ p.rival || 'Sin rival' }}</h1>
+      <p class="aviso">
+        {{ p.fecha | date: 'dd/MM/yyyy' }}
+        @if (p.tipo) {
+          · <span class="chip">{{ p.tipo }}</span>
+        }
+        · <app-resultado-badge [resultado]="p.resultado" />
+      </p>
+      @if (p.notas) {
+        <p class="notas">“{{ p.notas }}”</p>
+      }
+      @if (p.registradoPor) {
+        <p class="aviso">Cargado por {{ p.registradoPor }}</p>
+      }
+    </div>
+  </section>
+
+  <section class="seccion">
+    <h2>Quién jugó</h2>
+
+    @if (p.actuaciones.length === 0) {
+      <p class="aviso">Este partido no tiene actuaciones cargadas.</p>
+    } @else {
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Jugador</th>
+            <th>Posición</th>
+            <th>Goles</th>
+            <th>MVP</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (a of p.actuaciones; track a.id) {
+            <tr>
+              <td><a [routerLink]="['/jugadores', a.jugadorId]">{{ a.jugador }}</a></td>
+              <td>{{ a.posicion || '—' }}</td>
+              <td>{{ a.goles }}</td>
+              <td>{{ a.mvp ? '⭐' : '' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+
+  <section class="seccion">
+    <h2>Grabaciones</h2>
+
+    @if (p.medios.length === 0) {
+      <p class="aviso">
+        Todavía no hay fotos ni videos de este partido. Se cargan en cualquier momento.
+      </p>
+    } @else {
+      <div class="galeria">
+        @for (m of p.medios; track m.id) {
+          <figure class="medio">
+            @if (m.tipo === 'youtube' && youtubeEmbed(m.url); as embed) {
+              @if (reproduciendo() === m.id) {
+                <iframe
+                  class="video"
+                  [src]="embed"
+                  [title]="m.titulo || 'Video del partido'"
+                  allow="accelerometer; encrypted-media; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              } @else {
+                <button type="button" class="miniatura" (click)="reproduciendo.set(m.id)">
+                  <img
+                    [src]="youtubeMiniatura(youtubeId(m.url)!)"
+                    [alt]="m.titulo || 'Video del partido'"
+                  />
+                  <span class="play">▶</span>
+                </button>
+              }
+            } @else if (m.tipo === 'imagen' && m.url) {
+              <a [href]="m.url" target="_blank" rel="noopener">
+                <img class="foto" [src]="m.url" [alt]="m.titulo || 'Foto del partido'" />
+              </a>
+            } @else if (m.url) {
+              <a class="boton" [href]="m.url" target="_blank" rel="noopener">Ver el video</a>
+            }
+
+            <figcaption>{{ m.titulo || 'Sin título' }}</figcaption>
+          </figure>
+        }
+      </div>
+    }
+  </section>
+}

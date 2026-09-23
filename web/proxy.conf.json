@@ -4,5 +4,11 @@
     "secure": false,
     "changeOrigin": true,
     "logLevel": "warn"
+  },
+  "/medios": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "warn"
   }
 }

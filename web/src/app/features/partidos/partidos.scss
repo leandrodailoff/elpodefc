@@ -1,0 +1,13 @@
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 1rem 0;
+}
+
+.filtros .boton.activo {
+  border-color: var(--acento);
+  color: var(--acento);
+  background: rgba(53, 196, 106, 0.12);
+}
+

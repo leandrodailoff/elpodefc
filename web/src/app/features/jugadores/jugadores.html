@@ -1,4 +1,51 @@
 <h1>Plantel</h1>
-<p>Todos los jugadores del club: los del presente y los históricos.</p>
+<p>Todos los que alguna vez se pusieron la camiseta de El Pode FC.</p>
 
-<!-- Pendiente: GET /api/jugadores → tarjetas; cada una va a /jugadores/:id -->
+<div class="filtros">
+  @for (o of opciones; track o.valor) {
+    <button
+      type="button"
+      class="boton"
+      [class.activo]="filtro() === o.valor"
+      (click)="filtro.set(o.valor)"
+    >
+      {{ o.etiqueta }}
+    </button>
+  }
+</div>
+
+@if (jugadores.cargando()) {
+  <p class="aviso">Cargando el plantel…</p>
+} @else if (jugadores.error()) {
+  <p class="error">{{ jugadores.error() }}</p>
+  <button class="boton" type="button" (click)="jugadores.recargar()">Reintentar</button>
+} @else if (jugadores.dato()!.length === 0) {
+  <p class="aviso">Todavía no hay jugadores cargados.</p>
+} @else {
+  <div class="grilla">
+    @for (j of jugadores.dato()!; track j.id) {
+      <a class="tarjeta jugador" [routerLink]="['/jugadores', j.id]">
+        @if (j.fotoUrl) {
+          <img class="foto" [src]="j.fotoUrl" [alt]="j.nombre" />
+        } @else {
+          <span class="inicial">{{ j.nombre.charAt(0) }}</span>
+        }
+
+        <span class="nombre">{{ j.nombre }}</span>
+
+        @if (j.gamertag) {
+          <span class="gamertag">{{ j.gamertag }}</span>
+        }
+
+        <span class="etiquetas">
+          @if (j.posicionHabitual) {
+            <span class="chip">{{ j.posicionHabitual }}</span>
+          }
+          @if (!j.activo) {
+            <span class="chip historico">Histórico</span>
+          }
+        </span>
+      </a>
+    }
+  </div>
+}

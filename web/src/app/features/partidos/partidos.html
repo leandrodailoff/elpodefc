@@ -1,4 +1,63 @@
 <h1>Partidos</h1>
-<p>El historial completo del club, con filtros por resultado y tipo de partido.</p>
+<p>Todo lo que jugó el club, del partido más reciente al más viejo.</p>
 
-<!-- Pendiente: GET /api/partidos (+filtros) → tabla de resultados; cada fila va a /partidos/:id -->
+<div class="filtros">
+  @for (o of opciones; track o.valor) {
+    <button
+      type="button"
+      class="boton"
+      [class.activo]="resultado() === o.valor"
+      (click)="resultado.set(o.valor)"
+    >
+      {{ o.etiqueta }}
+    </button>
+  }
+</div>
+
+@if (partidos.cargando()) {
+  <p class="aviso">Cargando el historial…</p>
+} @else if (partidos.error()) {
+  <p class="error">{{ partidos.error() }}</p>
+  <button class="boton" type="button" (click)="partidos.recargar()">Reintentar</button>
+} @else if (partidos.dato()!.length === 0) {
+  <p class="aviso">
+    @if (resultado()) {
+      No hay partidos con ese resultado.
+    } @else {
+      Todavía no hay partidos cargados.
+    }
+  </p>
+} @else {
+  <p class="aviso">{{ partidos.dato()!.length }} partido(s)</p>
+
+  <table class="tabla">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Rival</th>
+        <th>Tipo</th>
+        <th>Marcador</th>
+        <th></th>
+        <th>Grabaciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (p of partidos.dato()!; track p.id) {
+        <tr>
+          <td>{{ p.fecha | date: 'dd/MM/yyyy' }}</td>
+          <td><a [routerLink]="['/partidos', p.id]">{{ p.rival || 'Sin rival' }}</a></td>
+          <td>{{ p.tipo || '—' }}</td>
+          <td>{{ p.marcadorPropio }} - {{ p.marcadorRival }}</td>
+          <td><app-resultado-badge [resultado]="p.resultado" /></td>
+          <td>
+            @if (p.cantidadMedios > 0) {
+              <a [routerLink]="['/partidos', p.id]">🎬 {{ p.cantidadMedios }}</a>
+            } @else {
+              <span class="aviso">—</span>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

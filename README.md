@@ -11,8 +11,10 @@ Web del club Pro **El Pode FC** (EA Sports FC): partidos, estadísticas, medios 
   Npgsql y la **migración `InitialCreate` aplicada** a la BD local (puerto 5433).
   **API v1 completa**: jugadores, partidos (alta en una llamada), medios, club +
   estadísticas y formaciones, con clave compartida (`X-Club-Key`) en las escrituras.
-- Frontend `web/`: **Angular 21** (standalone, signals, sin SSR) con las 9 pantallas
-  del mapa de secciones, layout propio, proxy `/api` y la clave del club en `core/`.
+- Frontend `web/`: **Angular 21** (standalone, signals, sin SSR) — **las 8 secciones públicas
+  consumen la API** (Inicio con el "¿se juega hoy?", historial con filtros, detalle con
+  grabaciones, plantel, perfiles con stats, estadísticas, galería y la canchita en SVG),
+  con estados de carga/error en todas. Falta el formulario de carga (`/admin`).
 - La documentación viva de la idea (análisis, BD, API, estructura) está en
   `d:\Proyectos\.clinerules\elpodefc` y se refleja en [`docs/`](docs/).
 
@@ -34,6 +36,6 @@ Parar: `docker compose stop db` · Borrar todo (datos incluidos): `docker compos
 ## Próximos pasos
 
 - [`api/`](api/) — ✅ API v1 completa (ver `api/README.md` y `ElPodeFC.Api.http`).
-- [`web/`](web/) — consumir la API en cada sección (pendiente).
+- [`web/`](web/) — ✅ secciones públicas conectadas · pendiente: el formulario de carga (`/admin`).
 - [`deploy/`](deploy/) — compose completo + proxy + SSL · layout en `estructura-proyecto.md`
   (en `.clinerules/elpodefc`).

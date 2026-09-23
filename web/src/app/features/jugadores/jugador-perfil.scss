@@ -1,0 +1,62 @@
+.encabezado {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.foto,
+.inicial {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.inicial {
+  display: grid;
+  place-items: center;
+  background: rgba(53, 196, 106, 0.15);
+  color: var(--acento);
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+.gamertag {
+  color: var(--texto-suave);
+}
+
+.numero {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.numero .valor {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--acento);
+  line-height: 1.1;
+}
+
+.numero .etiqueta {
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
+.record {
+  margin-top: 1rem;
+  max-width: 320px;
+}
+
+.record .g {
+  color: var(--acento);
+  font-weight: 600;
+}
+
+.record .p {
+  color: var(--alerta);
+  font-weight: 600;
+}
+

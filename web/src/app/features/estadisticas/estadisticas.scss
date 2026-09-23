@@ -1,0 +1,24 @@
+.numero {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.numero .valor {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--acento);
+  line-height: 1.15;
+}
+
+.numero .etiqueta {
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
+.resultados {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+

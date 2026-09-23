@@ -44,3 +44,100 @@ p {
   margin: 0 0 0.5rem;
 }
 
+/* --- Piezas reusables por las secciones --- */
+
+.tarjeta {
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 1rem 1.25rem;
+}
+
+.grilla {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+.seccion {
+  margin-top: 1.75rem;
+}
+
+.seccion h2 {
+  font-size: 1.1rem;
+  color: var(--texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla th,
+.tabla td {
+  padding: 0.55rem 0.6rem;
+  text-align: left;
+  border-bottom: 1px solid var(--borde);
+}
+
+.tabla th {
+  color: var(--texto-suave);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.tabla tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.aviso {
+  color: var(--texto-suave);
+  font-style: italic;
+}
+
+.error {
+  color: var(--alerta);
+}
+
+.chip {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  font-size: 0.78rem;
+  color: var(--texto-suave);
+}
+
+.boton {
+  display: inline-block;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: transparent;
+  color: var(--texto);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.boton:hover {
+  border-color: var(--acento);
+  color: var(--acento);
+}
+
+.boton-principal {
+  background: var(--acento);
+  border-color: var(--acento);
+  color: #06210f;
+  font-weight: 600;
+}
+
+.boton-principal:hover {
+  color: #06210f;
+  filter: brightness(1.1);
+}
+
+
